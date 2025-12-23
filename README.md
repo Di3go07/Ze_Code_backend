@@ -7,6 +7,27 @@ Além do aplicativo permitir essa dinâmica flexivel ao fazer seu pedido, você 
 
 O projeto apresentando consiste na organização desses parceiros e construção de um programa que busque aquele que se encontra mais proximo da coordenada inserida pelo cliente. 
 
+## 🧩 Variáveis
+
+Antes de prosseguir com o projeto, é necessário passar algumas variáveis globais, pois a aplicação precisa de algumas informações pessoais e sensíveis para prosseguir com as suas operações. 
+
+Crie um arquivo `config.json` na raiz do projeto com a seguinte estrutura:
+
+` ` `
+{
+    "database": {
+        "user": "SEU_USUARIO_MYSQL",
+        "password": "SUA_SENHA_MYSQL",
+        "host": "127.0.0.1",
+        "database": "NOME_DO_BANCO",
+        "port": 3306
+    },
+    "api_key": {
+        "value": "SUA_API_KEY_DO_GOOGLE_MAPS"
+    }
+}
+ ` ` `
+
 ## 💾 Banco de Dados
 
 O banco de dados do projeto tem como objetivo organizar em tabelas as informações dos parceiros deste arquivo [JSON](pdvs.json)
