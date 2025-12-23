@@ -118,7 +118,7 @@ No SQL, o usuario pode executar alguns comandos para ter uma leitura melhor do b
   ```
 ## 🌐 Site
 
-O site do Zé Code te permite escolher tanto entre adicionar o id de um parceiro e encontrar sua coverageArea no Google Maps quanto inserir um ponto em x e y para retornar aquele mais proximo de você.
+O site do Zé Code te permite escolher tanto entre adicionar o id de um parceiro e encontrar sua coverageArea no Google Maps quanto inserir um ponto em latitude e longitude para retornar aquele mais proximo de você.
 
 Na construção desse sistema do site foi necessário um arquivo javascript que interpreta as informações de coordenada de cada parceiro a partir do arquivo json com todas as informações. Após manipular esses dados, as coordenadas do parcceiro, salvas em uma lista de dicionários, são lidas pela API do Google Maps para criar um poligono com sua localização geografica no mapa. 
 
