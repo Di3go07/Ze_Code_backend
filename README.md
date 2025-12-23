@@ -151,7 +151,7 @@ Na construção desse sistema do site foi necessário um arquivo javascript que 
 <br>
 
 <div align="center">
-  <img src="./Imagens/IDs.gif" widht=700 height=700>
+  <img src="./Images/id_gif.gif" widht=700 height=700>
   <p align="center"> Utilizando a função de achar parceiro pelo Id </p>
 </div>
 <br>
@@ -161,7 +161,7 @@ Além disso, o arquivo js também incorpora uma função responsável por ler co
 <br>
 
 <div align="center">
-  <img src="./Imagens/Coordenadas.gif" widht=700 height=700>
+  <img src="./Images/coord_gif.gif" widht=700 height=700>
   <p> Passando uma coordenada para buscar o parceiro mais próximo </p>
 </div>
 
