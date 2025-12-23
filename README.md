@@ -67,6 +67,30 @@ Para obter a sua chave, siga os seguintes passos:
     - A chave terá formato: AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     - Copie e cole no campo "value" do config.json
 
+## 🐍 Ambiente Python 
+
+Além das variáveis, os códigos Python precisam antes de uma operação de download para as bibliotecas importadas. Esses códigos populam o banco de dados com as informações dos parceiros, mas deve-se salientar que não fundamentais para o projeto, pois as consultas web são realizadas diretamente no arquivo .JSON dos parceiros e não no banco. Caso deseje popular o banco para melhor organização, prepare o ambeinte python com as seguintes etapas:
+
+1. Acesse o diretório do projeto
+```
+cd /caminho/para/Ze-Code_backend
+```
+
+2. Crie o ambiente virtual
+```
+python -m venv venv
+```
+
+3. Ative o ambiente virtual
+```
+venv\Scripts\activate
+```
+
+4. Instale as dependências necessárias
+```
+pip install -r requirements.txt
+```
+
 ## 💾 Banco de Dados
 
 O banco de dados do projeto tem como objetivo organizar em tabelas as informações dos parceiros deste arquivo [JSON](pdvs.json)
