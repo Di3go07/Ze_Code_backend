@@ -1,6 +1,9 @@
 let GOOGLE_MAPS_API_KEY = '';
 
 async function loadApiKey() {
+    /*
+    Essa função le o valor de api_key do Google Maps armazenada no arquivo JSON de configurações do projeto e armazena globalmente para ser acessada na aplicação web
+    */
     try {
         const response = await fetch('/config.json');
         if (!response.ok) {
@@ -21,6 +24,6 @@ async function loadApiKey() {
     }
 }
 
-// Exporta a função e a variável
+// Exporta a função e a variável para a página
 window.loadApiKey = loadApiKey;
 window.GOOGLE_MAPS_API_KEY = GOOGLE_MAPS_API_KEY;

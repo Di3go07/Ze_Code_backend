@@ -32,7 +32,7 @@ function alterarParametro(value){
 
     if (value == "cords"){
         mensagem.textContent = "Coordenada atual";
-        input.placeholder = "x,y"
+        input.placeholder = "lat, lng"
         parametro_busca = "cords";
 
         input.value = '';
@@ -101,11 +101,73 @@ function handleParametro(){
             break;
     }
 }
+async function loadGoogleMapsAPI() {
+    /*
+    Essa função resgata a api_key armazenada globalmente e estabelece a conexão com a API do Google Maps
+    */
+    
+    // Verifica se a API já está carregada
+    if (window.google && window.google.maps) {
+        console.log('Google Maps API já está carregada');
+        return true;
+    }
+
+    // Carrega a API Key primeiro
+    let apiKey = '';
+    try {
+        // Tenta carregar do config.js se disponível
+        if (typeof window.loadApiKey === 'function') {
+            apiKey = await window.loadApiKey();
+        } else {
+            // Fallback: carrega diretamente
+            const response = await fetch('/config.json');
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            
+            const config = await response.json();
+            if (config.api_key && config.api_key.value) {
+                apiKey = config.api_key.value;
+            } else {
+                throw new Error('API Key não encontrada no config.json');
+            }
+        }
+    } catch (error) {
+        console.error('❌ Erro ao carregar API Key:', error);
+        document.getElementById('mensagem_retorno').textContent = 
+            'Erro: Configuração do mapa não carregada. Verifique o arquivo config.json';
+        throw error;
+    }
+
+    // Carrega o Google Maps API
+    return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}`;
+        script.async = true;
+        script.defer = true;
+        
+        script.onload = () => {
+            console.log('✅ Google Maps API carregada com sucesso');
+            resolve(true);
+        };
+        
+        script.onerror = (error) => {
+            console.error('❌ Erro ao carregar Google Maps API:', error);
+            document.getElementById('mensagem_retorno').textContent = 
+                'Erro ao carregar o mapa. Verifique sua conexão e API Key.';
+            reject(error);
+        };
+        
+        document.head.appendChild(script);
+    });
+}
 
 async function initMap(partnerCoords){
     /*
     Essa função recebe uma lista com dicionários de coodernadas em latitude e longitude para desenhar a área de atuação do delivery do parceiro em um mapa através de uma API do Google Maps
     */
+
+    //Chama a API do Google Maps
+    await loadGoogleMapsAPI();
+
     // Cria o mapa
     const map = new google.maps.Map(document.getElementById("map"), {
         zoom: 13,
@@ -160,7 +222,7 @@ async function acharComCoords(coords){
     /*
     Essa função recebe um par de coodenadas e analisa se elas estão na área de atuação de alguns dos delivers. Se não estiver, procura aquele mais próximo da localização passada.
     */
-    const [lat, lng] = coords.split(",").map(Number); //converte as coordenadas digitas em uma lista de posição x e y
+    const [lat, lng] = coords.split(",").map(Number); //converte as coordenadas digitas em uma lista de posição lat e lng
     const user_coords = [lng, lat];
     let achouParceiro = false                                                //variável booleana se o usuário está na coverageArea de algum parceiro
 
