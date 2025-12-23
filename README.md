@@ -15,13 +15,13 @@ O banco de dados do projeto tem como objetivo organizar em tabelas as informaç�
 
 <br>
 <div align="center">
-  <img src="./Images/Diagrama.jpg">
+  <img src="./Imags/Diagrama.jpg">
   <p align="center"> Diagrama que representa as relações entre as entidades no banco </p>
 </div>
 
 <br>
 <div align="center">
-  <img src="./Images/relacionamento.png" widht=600 height=600>
+  <img src="./Imags/relacionamento.png" widht=600 height=600>
   <p align="center"> Representação ER do projeto no formato das tabelas </p>
 </div>
 <br>
