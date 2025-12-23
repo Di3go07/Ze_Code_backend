@@ -49,16 +49,20 @@ CREATE DATABASE Ze_Code;
   
 **API GOOGLE MAPS**
 
+Para obter a sua chave, siga os seguintes passos:
+
 1. Acessar Google Cloud Console:
     - Vá para Google Cloud Console
     - Faça login com sua conta Google
     - Crie um novo projeto ou selecione um existente
+      
 2. Ativar APIs Necessárias:
    - No menu lateral, vá para APIs & Services → Library
    - Pesquise e ative Maps JavaScript API
    - Vá para APIs & Services → Credentials
    - Clique em + CREATE CREDENTIALS → API Key
    - Uma nova chave será gerada
+     
 3. Copiar a Chave:
     - A chave terá formato: AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     - Copie e cole no campo "value" do config.json
