@@ -161,7 +161,7 @@ Além disso, o arquivo js também incorpora uma função responsável por ler co
 <br>
 
 <div align="center">
-  <img src="./Images/coord_gif.gif" widht=700 height=700>
+  <img src="./Images/coords_gif.gif" widht=700 height=700>
   <p> Passando uma coordenada para buscar o parceiro mais próximo </p>
 </div>
 
