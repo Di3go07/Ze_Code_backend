@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Imports -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" type="text/css" href="/style/index.css">
+
+    <!-- Customização da aba do navegador -->
+    <link
+      rel="icon"
+      href="/Images/ze-delivery-icon-face.png"
+      type="image/png"
+    />
+    <title>Delivery</title>
+
+    <!-- Metadados -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Desafio proposto pelo Zé Code de desenvolver um site para buscar parceiros da rede de distribuição do Zé Delivery e sua área de atendimento de delivery, integrando APIs e banco de dados."
+    />
+    <meta
+      name="keywords"
+      content="Desafio, Zé Delivery, Delivery, Parceiros, API, Banco de Dados"
+    />
+    <meta name="author" content="Di3go07" />
+  </head>
+
+  <body>
+    <header class="header">
+      <img
+        src="/Images/ze-delivery-logo-1.svg"
+        alt="Logo do Zé Delivery"
+        width="95px"
+        height="62px"
+      />
+      <a
+        href="https://www.ze.delivery/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Acesse o site original
+      </a>
+    </header>
+
+    <main class="main">
+        <section class="banner">
+            <div class="banner-filter"></div>
+            <h1 id="banner-heading" style="text-transform: uppercase" tabindex="0">
+                Encontre o melhor parceiro para fazer a sua entrega
+            </h1>
+            <a href="#article-header">Procure no mapa</a>  
+        </section>
+
+      <section class="cards" data-length="3" aria-label="Funções do site">
+        <h2 tabindex="0">Como funciona o site?</h2>
+        <section class="cards-section">
+          <div class="card" id="card-1" tabindex="0">
+            <img
+              src="/Images/moto.png"
+              alt="Icon de um motoqueiro"
+              width="142px"
+              height="142px"
+              aria-hidden="true"
+            />
+            <h3>Delivery</h3>
+            <p>
+              Todos os parceiros do Zé Delivery reunidos em um só lugar para
+              otimizar o delivery do seu pedido.
+            </p>
+          </div>
+          <div class="card" id="card-2" tabindex="0">
+            <img
+              src="/Images/cracha.png"
+              alt="Icon de um cracha"
+              width="142px"
+              height="142px"
+              aria-hidden="true"
+            />
+            <h3>ID</h3>
+            <p>
+              Insira o ID de um parceiro e descubra a região de atendimento do
+              delivery dele. Os números variam de 0 a 50.
+            </p>
+          </div>
+          <div class="card" id="card-3" tabindex="0">
+            <img
+              src="/Images/localizador-de-mapa.png"
+              alt="Icon de um mapa"
+              width="142px"
+              height="142px"
+              aria-hidden="true"
+            />
+            <h3>Coordenadas</h3>
+            <p>
+              Insira as cordenadas da sua posição atual para achar o parceiro mais perto de você.
+            </p>
+          </div>
+        </section>
+      </section>
+
+      <article class="article">
+        <header id="article-header" class="article-header">
+          <h2 tabindex="0">Encontre o melhor delivery para você</h2>
+          <p>
+            Use as opções abaixo para localizar um parceiro da rede Zé Delivery
+          </p>
+        </header>
+
+        <div class="article-body">
+          <aside
+            class="menu"
+            aria-label="Menu para escolher os métodos de busca e um input para adicionar a informação desejada"
+          >
+              <form id="meuForm" autocomplete="off">
+                <h3 id="menu_title">Escolha uma opção</h3>
+                <label>
+                    <input type="radio" name="tamanho" value="id" checked> ID
+                </label> 
+                <label>
+                    <input type="radio" name="tamanho" value="cords"> Coordenada
+                </label>
+            </form>
+            <section class="input">
+              <label for="input_field" id="input_message" class="legend">
+                ID do parceiro
+              </label>
+              <br />
+              <input
+                id="input_field"
+                placeholder="Número de 0 a 50"
+                min="0"
+                max="50"
+              />
+              <br />
+              <p class="message" id="message" tabindex="0">
+                <small> Error: número não aceito </small>
+              </p>
+              <button id="input_button" aria-label="Buscar um parceiro">
+                Buscar
+              </button>
+            </section>
+          </aside>
+
+          <section class="maps">
+            <div class="map-section">
+              <div id="map"></div>
+            </div>
+            <p class="tela-incopativel" tabindex="0"> Use seu celular na horizontal para acessar o mapa </p>
+            <p class="retorno" id="mensagem_retorno" tabindex="0">Preencha os dados para atualizar o mapa</p>
+          </section>
+        </div>
+      </article>
+    </main>
+    <footer class="footer">
+      <img
+      src="/Images/ze-delivery-logo-1.svg"
+      alt="Logo do Zé Delivery"
+      width="95px"
+      height="62px"
+      tabindex="0"
+    />
+    <p class="copyright_text" tabindex="0"> &copy; 2025 - All Rights Reserved </p>
+    <section class="finalizacao" tabindex="0">
+      <p>Esse site é um projeto de resolução do desafio proposto pelo Zé Code e usa os dados providenciados por eles.</p>
+      <p>Acesse o <a href="https://github.com/DevMendes21/ze-delivery-code-challenge">github do desafio</a> para conhecer mais</p>
+    </section>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+    <script src="/script/index.js"></script>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbH_QUQ6eM2g28STHdovVYotuEPDyjD7A&callback=initMap"
+      async
+      defer>
+    </script>
+  </body>
+</html>

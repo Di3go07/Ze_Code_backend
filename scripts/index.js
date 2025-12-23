@@ -1,54 +1,122 @@
-window.onload = opcaoSelecionada()
+/*
+=== index.js ===
+O código cria uma operação para o menu da sessão maps da página. Priemeiramente, o código define um padrão de busca por meio dos radios buttons, podendo ser por meio do id de um parceiro (padrão) ou as coordenadas fornecidas pelo usuário. Quando o botão de busca é clicado, a aplicação consulta qual padrão foi escolhido pelo usuário e o redireciona para sua respectiva função.
+Caso a opção seja "id", o código procura no banco de dados a área de atuação de delivery do parceiro com esse id e constroi a sua área de atuação do mapa.
+Caso a opção seja "cords", o código faz uma verificação para conferir se o usuário está em alguma área de atuação e a imprime no mapa. Se não estiver, procura aquele mais próixmo dessa localização.
+*/
 
-//BUSCA AS COORDENADAS DE UM ID
-function minhaFuncao() {
-  const id_partner = parseInt(document.getElementById('campo_id').value);
-  console.log(id_partner);
+// == VARIÁVEIS GLOBAIS ==
 
-  if (id_partner >= 51 || id_partner < 0) {
-    alert('Escolha valores entre 0 e 50');
-    document.getElementById('campo_id').value = '';
-  } else {
-    async function filtrarCords()  {
-      //entrar em contato com a API
-      const dados = await fetch("https://raw.githubusercontent.com/ab-inbev-ze-company/ze-code-challenges/refs/heads/master/files/pdvs.json");
-      const dados_formatados = await dados.json();
+let parametro_busca = "id";
 
-      //filtrar dados 
-      const coords_len = dados_formatados.pdvs[id_partner]['coverageArea']['coordinates'][0][0].length; //quantidade de coordenadas de um parceiro
-      const partner_cordenadas =  []; //lista com as coordenadas
+// == FUNÇÔES ==
 
-      for (let i = 0; i < coords_len; i++)  { //itera sobre cada coordenada de um parceiro, as separando
-        eixo_x = dados_formatados.pdvs[id_partner]['coverageArea']['coordinates'][0][0][i][1]; //resgatar valor de uma coverageArea
-        eixo_y = dados_formatados.pdvs[id_partner]['coverageArea']['coordinates'][0][0][i][0];
-                  //dados_formatados[id_partner]['coverageArea']['coordinates'][0][0][coordenada][eixo(0,1)]
-      partner_cordenadas.push({ lat: eixo_x, lng: eixo_y});
-      }
+window.onload = function() {
+    /*
+    Essa função lida com os elementos quando a página é recarregada para evitar erros inesperados
+    */
+    const input = document.getElementById('input_field');
+    input.value = '';
+    setupEventListeners();
 
-      return partner_cordenadas
+};
 
+function alterarParametro(value){
+    /*
+    Essa função recebe o valor atual dos radio buttons - id ou cords - da sessão menu e define na variável global a opção de busca escolhida pelo usuário.
+    Além disso, ela também atualiza os textos no menu para corresponder ao método escolhido.
+    */
+    const mensagem = document.getElementById("input_message");
+    const input = document.getElementById("input_field");
+    const input_error = document.getElementById("message");
+
+    if (value == "cords"){
+        mensagem.textContent = "Coordenada atual";
+        input.placeholder = "x,y"
+        parametro_busca = "cords";
+
+        input.value = '';
+
+        input_error.style.display = "none";
+    } else {
+
+
+        mensagem.textContent = "ID do parceiro";                  //altera a mensagem
+        input.placeholder = "Número de 0 a 50"
+        parametro_busca = "id";                                   //define o padrão de busca atual
+
+        input.value = '';                                         //reseta o input
+
+        input_error.style.display = "none";                       //reseta a mensagem de erro no input
+    }
+}
+
+function handleParametro(){
+    /*
+    O principio dessa função é ler a entrada do usuário no campo input e redirecionar corretamente à função de renderização do mapa respectiva ao padrão de busca escolhido por ele.
+    */
+
+    const input = document.getElementById('input_field');
+    const message = document.getElementById("message");
+
+    //trata inputs vazios ao clicar no botão
+    if (!input.value){
+        message.style.display = "block";
+        message.style.textDecoration = "none";
+        message.style.color = "red";
+        message.style.fontWeight = 600;
+        message.textContent = "Insira um valor no campo";
+        return; //reseta a função caso esteja vazio
     }
 
-    filtrarCords()
-      .then(lista_coordenadas => {
-        console.log(lista_coordenadas); // Exibe a lista de coordenadas no console
-        initMap(lista_coordenadas); // Passa as coordenadas para a função initMap
-      })
-      .catch(error => {
-        alert("Erro ao obter coordenadas: digite números entre 0 e 50");
-      });
+    //verifica qual o padrão de busca escolhido pelo usuário
+    switch(parametro_busca){
+        case "id":
+            if (Number.isInteger(Number(input.value)) && input.value <= 50 && input.value >= 0){
+                message.style.display = "none";
+                const partner_id = input.value;
+                acharComId(partner_id);
+            } else {
+                message.style.display = "block";
+                message.textContent = "Insira um número entre 0 e 50";
+            }
+            break;
 
-    function initMap(partnerCoords) {
+        case "cords":
+            //validação do input
+            let regex = /^[+-]?\d+(?:\.\d+)?\s*,\s*[+-]?\d+(?:\.\d+)?$/;
 
-      // Cria o mapa
-      const map = new google.maps.Map(document.getElementById("map"), {
+            if (regex.test(input.value)){
+                message.style.display = "none";
+                const partner_coords = input.value;
+                acharComCoords(partner_coords)
+            } else {
+                message.style.display = "block";
+                message.textContent = "Coordenado inválida. Ex: 14.576, -26.654";
+            }
+            break;
+
+        default:
+            console.log("Erro no radio button");
+            break;
+    }
+}
+
+async function initMap(partnerCoords){
+    /*
+    Essa função recebe uma lista com dicionários de coodernadas em latitude e longitude para desenhar a área de atuação do delivery do parceiro em um mapa através de uma API do Google Maps
+    */
+    // Cria o mapa
+    const map = new google.maps.Map(document.getElementById("map"), {
         zoom: 13,
         center: partnerCoords[0], //centraliza com base na posição de um dos pontos do poligono
-        mapTypeId: "terrain",
-      });
+        mapTypeId: "roadmap",
+    });
 
-      // Construct the polygon.
-      const partnerPolygon = new google.maps.Polygon({
+    document.getElementById("map").style.border = "none"; //tira a estilização da div antes de ter um mapa
+
+    // Constroi o poligono
+    const partnerPolygon = new google.maps.Polygon({
         paths: partnerCoords, //cria o poligono com base nas coordenadas da lista
         strokeColor: "#FF0000",
         strokeOpacity: 0.8,
@@ -58,238 +126,125 @@ function minhaFuncao() {
       });
 
       partnerPolygon.setMap(map);
-    }
-  }
 }
 
+async function  acharComId(id){
+    /*
+    Essa função recebe o id de um dos parceiros e filtra no arquivo .JSON apenas as coordenadas da localização geográfica dele
+    */
+   const request = "https://raw.githubusercontent.com/ab-inbev-ze-company/ze-code-challenges/refs/heads/master/files/pdvs.json"; //caminho para o arquivo
+   const response = await fetch(request); //entra em contato com a API 
+   const dados = await response.json()  //resgata as informações do arquivo JSON
 
-//BUSCA UM ID PELAS COORDENADAS 
-
-//Verifica se a coordenada fornecida está em alguma CoverageArea
-async function acharPartner() {
-
-  const coord_partner = (document.getElementById('campo_id').value);
-  const array_coords = coord_partner.split(","); //converte as coordenadas digitas em uma lista de posição x e y
-  let achouParceiro = false;
-
-  //itera sobre cada coordenada de usuario até achar uma onde o ponto está em uma CoverageArea
-  for (let id = 0; id < 51 && !achouParceiro; id++) { 
-    try {
-      const lista_coordenadas = await filtrarCords(id); // Aguarda o retorno da função assíncrona
-
-      //2° Após filtrar as coordenadas, transmite as informações para próxima função
-      if (verificaProximidade(lista_coordenadas)) { // Verifica se o parceiro foi encontrado
-        achouParceiro = true; // Marca como encontrado
-        criarMapa(id); //cria um mapa mostrando a área do parceiro
-        texto = `Você pode pedir deliver no nosso parceiro de id ${id}`
-        elementoParceiro(texto); //cria um 'p' avisando que achou o parceiro
-      } 
-    } catch (error) {
-      console.error("Erro ao obter coordenadas. Digite os valores numéricos para x e y separados por vírgula.", error);
-    }
+   //filtrar dados do parceiro
+   const partner_name = dados.pdvs[id]['tradingName'];                              //nome do parceiro
+   const coords_len = dados.pdvs[id]['coverageArea']['coordinates'][0][0].length;   //quantidade de pontos da sua CoverageArea
+   
+   //iterar as coordendas 
+   const partner_cordenadas =  []; //lista de dicionários com cada uma das coordenadas no eixo x e y 
+   for (let i = 0; i < coords_len; i++)  {                                                    //itera sobre cada ponto da coverageArea de um parceiro para resgatar sua coordenada
+    eixo_x = dados.pdvs[id]['coverageArea']['coordinates'][0][0][i][1];            //resgata o valor ddo ponto no eixo x
+    eixo_y = dados.pdvs[id]['coverageArea']['coordinates'][0][0][i][0];            //resgata o valor do ponto no eixo y
+    partner_cordenadas.push({ lat: eixo_x, lng: eixo_y});                                     //adiciona a coordenada do ponto na lista
   }
 
-  //Após o fim do looping, verifica se achou um parceiro
-  if (achouParceiro !== true) { //caso não esteja na área de um parcceiro
-    buscarProximo(array_coords) //ativa a função que procura o parceiro mais próximo
-  }
+  //renderizando os dados
+  const mensagem_final = document.getElementById("mensagem_retorno");
+  mensagem_final.textContent = `O delivery do "${partner_name}" atua nessa área` //exibindo mensagem 
+  console.log(partner_cordenadas)
+  initMap(partner_cordenadas) //chamando função para renderizar o mapa
 
-  //1° filtra as coordenadas de um parceiro
-  async function filtrarCords(id)  {
-    //entrar em contato com a API
-    const dados = await fetch("https://raw.githubusercontent.com/ab-inbev-ze-company/ze-code-challenges/refs/heads/master/files/pdvs.json");
-    const dados_formatados = await dados.json();
-
-    //filtrar dados 
-    const coords_len = dados_formatados.pdvs[id]['coverageArea']['coordinates'][0][0].length; //obter o número de coordenadas de um parceiro
-    const partner_cordenadas =  []; //lista com as coordenadas
-
-    for (let i = 0; i < coords_len; i++)  { //itera sobre cada coordenada de um parceiro, as separando
-      eixo_x = dados_formatados.pdvs[id]['coverageArea']['coordinates'][0][0][i][1]; //resgatar valor de uma coverageArea
-      eixo_y = dados_formatados.pdvs[id]['coverageArea']['coordinates'][0][0][i][0];
-      partner_cordenadas.push([eixo_x, eixo_y]); //adiciona a coordenada obtida a lista
-    }
-
-    return partner_cordenadas //retorna a lista com todas as coordenadas de um parceiro específicio
-  } 
-
-
-  //3° ativar a função que verifica se a coordenada fornecida está na coverageArea do parceiro
-  function verificaProximidade(partnerCoords) {
-    // Coordenadas do polígono (array de arrays)
-    const polygonCoords = partnerCoords
-
-    // Criando o polígono com Turf.js
-    const polygon = turf.polygon([polygonCoords]);
-
-    // Coordenadas do ponto (latitude e longitude)
-    const pointCoords = array_coords; //coordenada passada pelo user
-
-    // Criando o ponto com Turf.js
-    const point = turf.point(pointCoords);
-
-    // Verificando se o ponto está dentro da área de cobertura
-    if (turf.booleanPointInPolygon(point, polygon)) {
-      return true; //avisa que achou um parceiro
-    } 
-  }
-
-  }
-
-//3.5 Buscar o parceiro mais próximo do user caso o user não esteja em alguma CoverageArea 
-async function buscarProximo(array_coords){
-    //entrar em contato com a API
-    const dados = await fetch("https://raw.githubusercontent.com/ab-inbev-ze-company/ze-code-challenges/refs/heads/master/files/pdvs.json");
-    const dados_formatados = await dados.json();
-
-    //ponto passado pelo usuário
-    const userPoint = array_coords 
-
-    //variáveis a serem atualizadas
-    let menor_distancia = Number.POSITIVE_INFINITY //menor distância
-    let id_maisProximo = 0  //id do parceiro mais proximo
-
-    //filtrar dados 
-    for (let id = 0; id < 51; id++)  { //itera sobre cada parceiro
-      const eixo_x = dados_formatados.pdvs[id]['address']['coordinates'][1]; //resgata ponto do endereço dele no plano
-      const eixo_y = dados_formatados.pdvs[id]['address']['coordinates'][0];
-      
-      const user_x = userPoint[0]
-      const user_y = userPoint[1]
-
-      //CALCULA DISTÂNCIA
-      let dAB = Math.sqrt(Math.pow(( user_x - eixo_x), 2) + Math.pow(( user_y - eixo_y), 2));
-      
-      if (dAB < menor_distancia)  { 
-        menor_distancia = dAB; //caso o valor obtida seja menor que o até então menor, ela é salva como a menor distância
-        id_maisProximo = id
-      }
-
-      criarMapa(id_maisProximo) //cria o mapa com a posição do parceiro mais próximo 
-      texto = `Você está mais próximo do nosso parceiro de id ${id_maisProximo}`
-      elementoParceiro(texto); //cria um 'p' avisando que achou o parceiro
-
-    }
 }
 
-//4° Cria um mapa com a coverage area do parceiro mais proximo
-function criarMapa(id) {
-  const id_partner = id
+async function acharComCoords(coords){
+    /*
+    Essa função recebe um par de coodenadas e analisa se elas estão na área de atuação de alguns dos delivers. Se não estiver, procura aquele mais próximo da localização passada.
+    */
+    const [lat, lng] = coords.split(",").map(Number); //converte as coordenadas digitas em uma lista de posição x e y
+    const user_coords = [lng, lat];
+    let achouParceiro = false                                                //variável booleana se o usuário está na coverageArea de algum parceiro
 
-  if (id_partner >= 51 || id_partner < 0) {
-    alert('Escolha valores entre 0 e 50');
-    document.getElementById('campo_id').value = '';
-  } else {
-    async function filtrarCords()  {
-      //entrar em contato com a API
-      const dados = await fetch("https://raw.githubusercontent.com/ab-inbev-ze-company/ze-code-challenges/refs/heads/master/files/pdvs.json");
-      const dados_formatados = await dados.json();
-      const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+    //Chamando API
+    const request = "https://raw.githubusercontent.com/ab-inbev-ze-company/ze-code-challenges/refs/heads/master/files/pdvs.json"; 
+    const response = await fetch(request); 
+    const dados = await response.json()  
 
-      //filtrar dados 
-      const coords_len = dados_formatados.pdvs[id_partner]['coverageArea']['coordinates'][0][0].length; //quantidade de coordenadas de um parceiro
-      const partner_cordenadas =  []; //lista com as coordenadas
+    // 1° - iterar sobre cada parceiro para ver se as coordenadas do usuário estão em sua coverageArea
+    for (let id = 0; id < 51 && !achouParceiro; id++) { 
+        // FILTRAR COORDENADAS DO PARCEIRO
+        const partner_name = dados.pdvs[id]['tradingName'];
+        const coords_len = dados.pdvs[id]['coverageArea']['coordinates'][0][0].length;   //quantidade de pontos da sua CoverageArea
+        
+        //iterar as coordendas 
+        const partner_cordenadas =  []; //lista de dicionários com cada uma das coordenadas no eixo x e y 
+        for (let i = 0; i < coords_len; i++)  {                       //itera sobre cada ponto da coverageArea de um parceiro para resgatar sua coordenada
+            const lng= dados.pdvs[id]['coverageArea']['coordinates'][0][0][i][0];            //resgata o valor ddo ponto no eixo x
+            const lat = dados.pdvs[id]['coverageArea']['coordinates'][0][0][i][1];            //resgata o valor do ponto no eixo y
+            partner_cordenadas.push([lng, lat]);                                     //adiciona a coordenada do ponto na lista
+        }
 
-      for (let i = 0; i < coords_len; i++)  { //itera sobre cada coordenada de um parceiro, as separando
-        eixo_x = dados_formatados.pdvs[id_partner]['coverageArea']['coordinates'][0][0][i][1]; //resgatar valor de uma coverageArea
-        eixo_y = dados_formatados.pdvs[id_partner]['coverageArea']['coordinates'][0][0][i][0];
-                  //dados_formatados[id_partner]['coverageArea']['coordinates'][0][0][coordenada][eixo(0,1)]
-      partner_cordenadas.push({ lat: eixo_x, lng: eixo_y});
-      }
+        //VERIFICA SE PARCEIRO CONTÊM POSIÇÃO DO USUÁRIO
+        const polygon = turf.polygon([partner_cordenadas]);         // Criando o polígono com Turf.js
+        const point = turf.point(user_coords);               // Criando o ponto do usuário com Turf.js
 
-      return partner_cordenadas
-
+        if (turf.booleanPointInPolygon(point, polygon)) {     // Verificando se o ponto está dentro da área de cobertura
+            achouParceiro = true;
+            initMap(partner_cordenadas.map(c => ({ lng: c[0], lat: c[1] })))  //passa as coordendas do parceiro para a função criar o mapa
+            const mensagem_final = document.getElementById("mensagem_retorno");
+            mensagem_final.textContent = `Você pode pedir um delivery no "${partner_name}"` //exibindo mensagem 
+        } else {
+            continue                                         //continua a busca caso a coverageArea não contenha o ponto
+        }
     }
 
-    filtrarCords()
-      .then(lista_coordenadas => {
-        initMap(lista_coordenadas); // Passa as coordenadas para a função initMap
-      })
-      .catch(error => {
-        console.error("Erro ao obter coordenadas:", error);
-      });
+    //2° Caso não esteja na área de cobertura de um parceiro, procura aquele mais próximo
+    if (achouParceiro !== true) {
+        //variáveis a serem atualizadas
+        let menor_distancia = Number.POSITIVE_INFINITY //menor distância
+        let id_maisProximo = 0  //id do parceiro mais proximo
 
-  function initMap(partnerCoords) {
+        //itera cada coordenada de todos os parceiros
+        for (let id = 0; id < 51; id++)  { //itera sobre cada parceiro
+            const eixo_x = dados.pdvs[id]['address']['coordinates'][0]; //resgata um ponto do endereço do parceiro no plano
+            const eixo_y = dados.pdvs[id]['address']['coordinates'][1];
+            
+            const user_x = lng;
+            const user_y = lat;
+    
+            //CALCULA DISTÂNCIA
+            let dAB = Math.sqrt(Math.pow(( user_x - eixo_x), 2) + Math.pow(( user_y - eixo_y), 2));
+            
+            if (dAB < menor_distancia)  { 
+            menor_distancia = dAB; //caso o valor obtida seja menor que o até então menor, ela é salva como a menor distância
+            id_maisProximo = id
+            }  
+        }
 
-      // Cria o mapa
-      const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 13,
-        center: partnerCoords[0], //centraliza com base na posição de um dos pontos do poligono
-        mapTypeId: "terrain",
-      });
+        // FILTRAR COORDENADAS DO PARCEIRO MAIS PRÓXIMO
+        const partner_name = dados.pdvs[id_maisProximo]['tradingName'];
+        const coords_len = dados.pdvs[id_maisProximo]['coverageArea']['coordinates'][0][0].length;   //quantidade de pontos da sua CoverageArea
 
-      // Construct the polygon.
-      const partnerPolygon = new google.maps.Polygon({
-        paths: partnerCoords, //cria o poligono com base nas coordenadas da lista
-        strokeColor: "#FF0000",
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: "#FF0000",
-        fillOpacity: 0.35,
-      });
+        //iterar as coordendas 
+        const partner_cordenadas =  []; //lista de dicionários com cada uma das coordenadas no eixo x e y 
+        for (let i = 0; i < coords_len; i++)  {                                                    //itera sobre cada ponto da coverageArea de um parceiro para resgatar sua coordenada
+            const eixo_x = dados.pdvs[id_maisProximo]['coverageArea']['coordinates'][0][0][i][1];            //resgata o valor ddo ponto no eixo x
+            const eixo_y = dados.pdvs[id_maisProximo]['coverageArea']['coordinates'][0][0][i][0];            //resgata o valor do ponto no eixo y
+            partner_cordenadas.push({ lat: eixo_x, lng: eixo_y});                                     //adiciona a coordenada do ponto na lista
+        }
 
-      partnerPolygon.setMap(map);
+        // CRIA O MAPA COM A ÁREA DO PARCEIRO MAIS PRÓXIMO
+        initMap(partner_cordenadas); 
+        const mensagem_final = document.getElementById("mensagem_retorno");
+        mensagem_final.textContent = `Delivery indisponível na sua região. "${partner_name}" é o parceiro mais próximo de você` 
     }
-  }
 }
 
+// == HTML OPERATIONS ==
 
+// Alterando parâmetros da busca
+const form = document.getElementById("meuForm");
+form.addEventListener("change", (e) => alterarParametro(e.target.value));
 
-//ATUALIZA O HTML
-
-//verificar qual opção foi marcada
-function opcaoSelecionada(){
-  const opcao1 = document.getElementById("idPartner");
-  const opcao2 = document.getElementById("coordenada");
-
-
-  if (opcao1.checked == true) {    
-    console.log('marcou opcao 1')
-    criarInterface1()
-  }
-  else if (opcao2.checked == true) {
-    console.log('marcou opcao 2')
-    criarInterface2()
-  }
-}
-
-//personalizar os elementos caso seja selecionada a primeira opção
-function criarInterface1() {
-  //buscar elementos
-  const label = document.getElementById("texto_campo");
-  const input = document.getElementById("campo_id");
-  const button = document.getElementById("buscaPartner");
-  const div = document.getElementById("button_campo");
-
-  input.value = "";
-  input.setAttribute("placeholder", "Digite o id de um parceiro");
-  label.textContent = "Id do parceiro:";
-  button.setAttribute("onclick", "minhaFuncao()");
-
-  // retira a mensagem da opção 'coordenadas' quando 'id' está ativado
-  const paragraph = document.querySelector('#mensagem p');
-  paragraph.textContent = '';
-
-}
-
-function criarInterface2() {
-  //buscar elementos
-  const label = document.getElementById("texto_campo");
-  const input = document.getElementById("campo_id");
-  const button = document.getElementById("buscaPartner");
-  const div = document.getElementById("button_campo");
-
-  input.value = "";
-  input.setAttribute("placeholder", "x, y");
-  label.textContent = "Digite uma coordenada:";
-  button.setAttribute("onclick", "acharPartner()");
-
-}
-
-//criar uma mensagem avisando que achou o parceiro  
-function elementoParceiro(mensagem) {
-  // Seleciona o elemento <p> dentro do div com ID 'mensagem'
-  const paragraph = document.querySelector('#mensagem p');
-
-  paragraph.textContent = mensagem;
-}
+//Ativar botão de busca
+const button = document.getElementById("input_button");
+button.addEventListener("click", handleParametro);

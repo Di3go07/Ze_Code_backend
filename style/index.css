@@ -1,0 +1,464 @@
+@import url('https://fonts.googleapis.com/css2?family=Amarna:ital,wght@0,100..700;1,100..700&family=Fredoka:wght@300..700&display=swap');
+/*   font-family: "Fredoka", sans-serif; */
+@import url('https://fonts.googleapis.com/css2?family=Amarna:ital,wght@0,100..700;1,100..700&family=Fredoka:wght@300..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+/*   font-family: "Roboto", sans-serif; */
+
+/*  || VARIABLES || */
+:root {
+    --background-color: #FFFFFF;
+    --amarelo-primario: #FFD600;
+    --amarelo-escuro: #E6C100;
+    --font-color: #1A1A1A;
+    --section-color: #CCCCCC;
+}
+
+
+/*  || RESET || */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* || GENERAL STYLES || */
+html {
+    scroll-behavior: smooth;
+  }
+
+body{
+    font-family: "Roboto", sans-serif; 
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: var(--font-color);
+    background-color: var(--background-color);
+}
+
+h2{
+    font-family: "Fredoka", sans-serif;
+    font-weight: 600;
+    font-size: 2rem;
+}
+
+button{
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 42px;
+    padding: 0.5em;
+    background-color: var(--amarelo-escuro);
+    border: #1A1A1A 2px solid;
+    border-radius: 25px;
+    cursor: pointer;
+}
+
+button:hover{
+    background-color: var(--font-color);
+    color: var(--amarelo-escuro);
+}
+
+input, label, legend{
+    font: inherit;
+    font-size: 1.2rem;
+}
+
+input[type="radio"] {
+    accent-color: var(--amarelo-escuro); /* Substitua pela cor desejada */
+}
+
+.header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px;
+    background-color: var(--amarelo-primario);
+}
+
+.header a{
+    font-family: "Fredoka", sans-serif;
+    font-weight: 600;
+    text-align: center;
+    color: var(--font-color);
+    text-decoration: none;
+    text-transform: uppercase;
+    padding: 0.5em;
+    border: #1A1A1A 2px solid;
+    border-radius: 25px;
+    cursor: pointer;
+    color: var(--font-color);
+}
+
+.header a:focus, .header a:hover{
+    background-color: #1A1A1A;
+    color: #FFD600;
+    transition: all .3s;
+}
+
+main{
+    display: flex;
+    flex-direction: column;
+}
+
+/* BANNER */
+.banner{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-image: url(/Images/street_view_picture.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: top;
+}
+
+.banner div{
+    background-color: var(--font-color);
+    opacity: 0.6;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.banner h1{
+    font-family: "Fredoka", sans-serif;
+    font-weight: 600;
+    color: #FFFFFF;
+    text-align: center;
+    z-index: 1;
+    padding: 1em;
+    font-size: 2rem;
+    text-shadow: black 0.1em 0.1em 0.2em
+}
+
+.banner a{
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #1A1A1A;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 42px;
+    padding: 1em;
+    background-color: var(--amarelo-escuro);
+    border: #1A1A1A 2px solid;
+    border-radius: 25px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.banner a:hover, .banner a:focus{
+    background-color: var(--font-color);
+    color: var(--amarelo-escuro);
+}
+
+.banner a: :visited{
+    text-decoration: none;
+    color: #1A1A1A;
+}
+
+
+.banner button a{
+    color: #1A1A1A;
+    text-decoration: none;
+}
+
+.banner button a:hover{
+    color: var(--amarelo-escuro)
+}
+
+/* CARDS SECTION */
+.cards{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    padding: 42px;
+}
+
+.card{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 60vw;
+    padding: 2em;
+    margin: 24px;
+    background-color: var(--amarelo-escuro);
+    border-radius: 40px;
+}
+
+.card h3{
+    font-family: "Fredoka", sans-serif;
+    font-size: 1.5rem;
+    padding: 0.5em;
+}
+
+/* ARTICLE SECTION */
+article{
+    background-color: var(--section-color);
+    padding: 42px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* header */
+.article-header{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.article-header p{
+    margin: 24px 0 42px 0;
+}
+
+/* body */
+
+.article-body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* -- menu-- */
+.menu{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 24px;
+}
+
+#meuForm h3{
+    margin-bottom: 24px;
+}
+
+#meuForm label{
+    display: block;
+    padding-bottom: 0.5em;
+}
+
+.input input{
+    padding:12px;
+    margin: 12px 0 12px 0;
+}
+
+.message{
+    display: none;
+    color: red;
+    font-weight: 600;
+}
+
+/* -- mapa -- */
+
+.maps{
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 24px;
+
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.maps .tela-incopativel{
+    font-weight: 600;
+}
+
+.maps .retorno{
+    font-size: 1.2rem;
+    max-width: 300px;
+    text-align: center;
+}
+
+.map-section {
+    flex: 1; 
+    width: 100%;
+}
+
+#map {
+    display: none;
+    width:100%;
+    height:500px;
+}
+
+/* footer */
+footer{
+    display: flex;
+    flex-direction: column-reverse;
+    padding: 2em;
+    gap: 24px;
+    background-color: var(--amarelo-primario);
+    justify-content: space-between;
+    align-items: center;
+}
+
+footer a{
+    color: var(--font-color);
+    cursor: pointer;
+}
+
+.copyright_text{
+    font-weight: 600;
+}
+
+.finalizacao{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 12px
+}
+
+
+/* || @MEDIA QUERY || */
+/* O site foi desenvolvido primeiramente para versão mobile e a media query definirá o comportamente em telas maiores*/
+
+/* MEDIUM */
+@media screen and (min-width: 768px) {
+    .header{
+        padding: 1em 3em;
+    }
+
+    .banner {
+        padding: 2em;
+        font-size: 2rem;
+    }
+
+    .banner button{
+        font-size: 1rem;
+    }
+
+    .map-section{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #map {
+        display: block;
+        top: 0;
+        left: 0;
+        width: 650px;
+        height: 450px;
+        border: 3px solid var(--amarelo-escuro);
+        background-color: white;
+        border-radius: 25px;
+    }
+
+    .tela-incopativel{
+        display: none;
+    }
+}
+
+/* LARGE */
+@media screen and (min-width: 992px) {
+    .banner h1{
+        padding: 2em;
+        font-size: 2.5rem;
+    }
+    
+    .banner button{
+        font-size: 1.2rem;
+    }
+
+    .cards{
+        justify-content: space-around;
+    }
+
+    .cards-section{
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        margin: 1vh;
+    }
+    .card{
+        max-width: 300px;
+    }
+
+    #map {
+        width: 850px;
+        height: 650px;
+    }
+
+    footer{
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    footer img {
+        padding: 0;
+        flex: 1;
+    }
+
+    footer .finalizacao{
+        flex: 1;
+        text-align: justify;
+    }
+    .copyright_text{
+        flex-grow: 1;
+        text-align: center;
+    }
+}
+
+/* || XL  */
+@media screen and (min-width: 1200px) {
+    .header a{
+        padding: 1em;
+    }
+    .banner{
+        height: 50vh;
+        background-size:cover;
+    }
+    .banner h1{
+        font-size: 3rem;
+    }
+    .banner button{
+        font-size: 1.5rem;
+    }
+    .cards-section{
+        width: 80%;
+    }
+
+    .menu button{
+        margin-top: 24px;
+        padding: 1em;
+        font-size: 1rem;
+    }
+    
+    .article-body{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+
+    .maps{
+        display: flex;
+        flex-direction: row;
+        align-items: baseline;
+    }
+
+    .maps p{
+        position: relative;
+        top: -30px;
+        padding: 12px;
+        border-left: #E6C100 2px solid;
+    }
+
+    .maps .retorno{
+        text-align: left;
+    }
+
+    #map{
+        border: 3px solid var(--amarelo-escuro);
+        background-color: white;
+        border-radius: 25px;
+    }
+}
