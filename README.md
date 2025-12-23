@@ -28,6 +28,38 @@ Crie um arquivo `config.json` na raiz do projeto com a seguinte estrutura:
 }
 ```
 
+As informações do **database** são importantes para configurar o banco de dados do projeto, enquanto a **api_key** é a chave de acesso para a conexão com o Google Maps. 
+
+** VARIÁVEIS DO BANCO **<br>
+Para obter as informações do banco de dados é necessário seguir os seguintes passos:
+
+1. Instale o MySQL
+2. Crie um banco de dados
+```
+mysql -u root -p
+CREATE DATABASE Ze_Code;
+```
+3. Consulte as credenciais
+   - user: Normalmente root para desenvolvimento local
+   - password: A senha que você definiu durante a instalação
+   - host: 127.0.0.1 ou localhost para servidor local
+   - database: Ze_Code (ou nome que você criou)
+   - port: 3306 (porta padrão do MySQL)
+  
+** API GOOGLE MAPS **<br>
+1. Acessar Google Cloud Console:
+    - Vá para Google Cloud Console
+    - Faça login com sua conta Google
+    - Crie um novo projeto ou selecione um existente
+2. Ativar APIs Necessárias:
+   - No menu lateral, vá para APIs & Services → Library
+   - Pesquise e ative Maps JavaScript API
+   - Vá para APIs & Services → Credentials
+   - Clique em + CREATE CREDENTIALS → API Key
+   - Uma nova chave será gerada
+3. Copiar a Chave:
+    - A chave terá formato: AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    - Copie e cole no campo "value" do config.json
 
 ## 💾 Banco de Dados
 
