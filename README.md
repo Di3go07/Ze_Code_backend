@@ -13,7 +13,7 @@ Antes de prosseguir com o projeto, é necessário passar algumas variáveis glob
 
 Crie um arquivo `config.json` na raiz do projeto com a seguinte estrutura:
 
-` ` `
+```
 {
     "database": {
         "user": "SEU_USUARIO_MYSQL",
@@ -26,7 +26,8 @@ Crie um arquivo `config.json` na raiz do projeto com a seguinte estrutura:
         "value": "SUA_API_KEY_DO_GOOGLE_MAPS"
     }
 }
- ` ` `
+```
+
 
 ## 💾 Banco de Dados
 
