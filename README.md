@@ -9,7 +9,7 @@ O projeto apresentando consiste na organização desses parceiros e construção
 
 ## 🧩 Variáveis
 
-Antes de prosseguir com o projeto, é necessário passar algumas variáveis globais, pois a aplicação precisa de algumas informações pessoais e sensíveis para prosseguir com as suas operações. 
+Antes de prosseguir com o projeto, é necessário declarar algumas variáveis globais, pois a aplicação precisa de algumas informações pessoais e sensíveis para prosseguir com as suas operações. 
 
 Crie um arquivo `config.json` na raiz do projeto com a seguinte estrutura:
 
