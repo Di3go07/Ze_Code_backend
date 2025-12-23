@@ -69,7 +69,7 @@ Para obter a sua chave, siga os seguintes passos:
 
 ## 🐍 Ambiente Python 
 
-Além das variáveis, os códigos Python precisam antes de uma operação de download para as bibliotecas importadas. Esses códigos populam o banco de dados com as informações dos parceiros, mas deve-se salientar que não fundamentais para o projeto, pois as consultas web são realizadas diretamente no arquivo .JSON dos parceiros e não no banco. Caso deseje popular o banco para melhor organização, prepare o ambeinte python com as seguintes etapas:
+Os códigos Python precisam antes de uma operação de download para as bibliotecas importadas. Esses códigos populam o banco de dados com as informações dos parceiros, mas deve-se salientar que não fundamentais para o projeto, pois as consultas web são realizadas diretamente no arquivo .JSON dos parceiros e não no banco. Caso deseje popular o banco para melhor organização, prepare o ambeinte python com as seguintes etapas:
 
 1. Acesse o diretório do projeto
 ```
